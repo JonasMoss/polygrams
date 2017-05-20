@@ -4,12 +4,12 @@
 \alias{get_symmetry_constraints}
 \title{Returns the constraints needed to enforce symmetry of a Bernstein polygram.}
 \usage{
-get_symmetry_constraints(m, s, symmetric = FALSE)
+get_symmetry_constraints(ms, s, symmetric = FALSE)
 }
 \arguments{
-\item{m}{The order of the Bernstein densities.}
-
 \item{s}{The split points. Must be symmetric for the procedure to work.}
+
+\item{m}{The order of the Bernstein densities.}
 }
 \value{
 A constraint matrix.

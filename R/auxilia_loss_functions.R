@@ -220,6 +220,7 @@ discrepancy = function(polygram_object, d = NULL) {
 
 #' Makes an elbow plot for a polygram object.
 #'
+#' @export
 #' @param data The underlying data
 #' @param N The maximal number of bins.
 #' @param type Can be "regular" or "quantiles".

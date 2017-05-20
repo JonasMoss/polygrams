@@ -217,7 +217,7 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
     qo1 <- list()
     qo1$sense <- "min"
     qo1$c <- dvec
-    qo1$A <- Matrix(constraint_matrix, sparse=TRUE)
+    qo1$A <- Matrix::Matrix(constraint_matrix, sparse=TRUE)
     qo1$bc <- rbind(blc = lower_bounds,
                     buc = upper_bounds)
 

@@ -5,12 +5,11 @@
 \title{Estimates a polygram with supplied data, m, p and split points. Several
 hard constraints are supported. The interface is prone to changes.}
 \usage{
-polygram(data, s = floor(length(data)^(1/3)), support = NULL, m = NULL,
-  p = NULL, d = NULL, M = 1, symmetric = FALSE, monotone = NULL,
-  shape = NULL, moment_conditions = NULL, unimodal = FALSE,
-  lower_boundary = NULL, quantile_conditions = NULL, lambdas = NULL,
-  upper_boundary = NULL, nu = NULL, k = NULL, verbose = 0,
-  method = "mosek")
+polygram(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL,
+  M = 1, symmetric = FALSE, monotone = NULL, shape = NULL,
+  moment_conditions = NULL, unimodal = FALSE, lower_boundary = NULL,
+  quantile_conditions = NULL, lambdas = NULL, upper_boundary = NULL,
+  nu = NULL, k = NULL, verbose = 0, method = "mosek")
 }
 \arguments{
 \item{data}{The data. Can be \code{NULL} if a density \code{d} is supplied.}
@@ -44,7 +43,7 @@ which moment is being constrained, while a and be give upper and lower bounds.
 If only one a or b is given, it is assumed that a = b and the condition is
 constant.}
 
-\item{unimodal}{Hard unimodality constraint.}
+\item{unimodal}{Hard unimodality constraint. Not supported yet.}
 
 \item{lower_boundary}{Hard lower boundary constraint. Defualts to NULL.}
 

@@ -174,7 +174,7 @@ polygram_objective_matrix = function(ms, s) {
 
   K = length(s) + 1
 
-  A = do.call(directSum, lapply(1:K, function(k) weights[k]*A_(ms[k])))
+  A = do.call(hisemi::directSum, lapply(1:K, function(k) weights[k]*A_(ms[k])))
 
   return(A)
 }

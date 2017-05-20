@@ -3,19 +3,16 @@ Type: Package
 Title: Density Estimation with Mixtures of Disjoint Bernstein Polynomials
 Version: 0.1.0
 Author: Jonas Moss
-Maintainer: Jonas Moss <jonas.moss@gmx.com>
+Maintainer: Jonas Moss <jonas.gjertsen@gmail.com>
 Description: Density estimation with discrete mixtures of Bernstein 
     polynomials. Supports several shape constraints, and contains 
     routines for computing distribution functions, quantiles, and
-    random number generatio.
-License: What license is it under?
+    random number generation.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    Rcpp (>= 0.12.9),
-    hisemi,
-    numDeriv
-LinkingTo: Rcpp
+    hisemi
 Suggests:
     testthat,
     Rmosek

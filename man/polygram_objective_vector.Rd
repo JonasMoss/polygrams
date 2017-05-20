@@ -5,7 +5,7 @@
 \title{Calculates the vector B used in the optimisation procedure. It supports both
 data and distribution functions as input.}
 \usage{
-polygram_objective_vector(data, s, m, d = NULL, M = NULL)
+polygram_objective_vector(data, ms, s)
 }
 \arguments{
 \item{data}{The data.}
