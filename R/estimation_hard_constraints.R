@@ -156,7 +156,7 @@ get_connectivity_constraints = function(ms, s, ps, directions = NULL) {
        upper = upper)
 }
 
-#' Returns the edge constraints.
+#' Returns the edge constraints. Not finished yet.
 #'
 #' @param s The vector of splits.
 #' @param ms The order of the Bernstein polynomial.

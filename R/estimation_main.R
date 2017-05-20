@@ -9,7 +9,7 @@
 #' @param m The order of the Bernstein polynomial. Defaults to 3.
 #' @param p Connectedness order. Defaults to \code{m-1}.
 #' @param d Optional distribution function. Can be the base function in a
-#' Dirichlet process if used in conjunction with M. Defaults to NULL.
+#' Dirichlet process if used in conjunction with M. Defaults to NULL. Currently not supported.
 #' @param M The concentration parameter in a Dirichlet process. Defaults to 1. Ignored
 #' if either \code{d} or \code{data} is \code{NULL}.
 #' @param symmetric Hard symmetry constraint. Requires that s is symmetric as well.
@@ -37,7 +37,11 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
                     M = 1, symmetric = FALSE, monotone = NULL, shape = NULL, moment_conditions = NULL,
                     unimodal = FALSE, lower_boundary = NULL, quantile_conditions = NULL, lambdas = NULL,
                     upper_boundary = NULL, nu = NULL, k = NULL, verbose = 0,
-                    method = "mosek") {
+                    method = "QP") {
+
+  if(unimodal) {
+    stop("Unimodality is not implemented yet.")
+  }
   # Fill in standard values
   if (is.null(m)) m = 3
   if (is.null(p)) p = m-1
@@ -259,12 +263,42 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
     class(v) = c("polygram")
     v
   } else if (method == "quadprog" | method == "QP" | method == "qp") {
+    qp_list = mosek2qp(constraint_matrix, lower_bounds, upper_bounds)
     Dmat = qobj_
-    Amat = constraint_matrix
-    # The main difference in the interface between mosek and qp is that qp allows
-    # only inequality constraints from below, and demands separate specification of
-    # equality constraints. Now we isolate the equality constraints and extend the
-    # constraint matrix to
+    Amat = qp_list$Amat
+    bvec = qp_list$bvec
+    meq  = qp_list$meq
+
+    # In addition, quadprog needs positivity constraints:
+    bvec = c(bvec, positive = rep(0,sum(ms+1)))
+    Amat = rbind(Amat, positive = diag(sum(ms+1)))
+
+    r = quadprog::solve.QP(Dmat = Dmat, dvec = -dvec, Amat = t(Amat), bvec = bvec, meq = meq)
+    v = r$sol
+
+    v = split(v, rep(1:(length(ms)), ms + 1))
+    names(v) = NULL
+    attr(v, "loss") = 2*r$value
+    attr(v, "m") = ms
+    attr(v, "K") = K
+
+    if (is.null(s_org)) {
+      attr(v, "s") = rep(1,0)
+    } else {
+      attr(v, "s") = s_org
+    }
+
+    attr(v, "p") = ps
+    attr(v, "support") = support
+    attr(v, "method") = method
+    attr(v, "call") = sys.call()
+    class(v) = c("polygram")
+    v
+
+    # list(v = v,
+    #      Amat = Amat,
+    #      bvec = bvec,
+    #      meq  = meq)
   }
 }
 
@@ -274,15 +308,29 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
 #' @param upper_bounds upper bounds for the constraints.
 #' @param tolerance tolerance for equality checking. Defaults to 10^-8.
 #' @return A list containing a new constraints matrix "Amat", a vector "bvec" holding lower bounds
-#' and a vector "mveq" holding equality constraints.
+#' and a number meq telling how many are equality constraints.
 mosek2qp  = function(constraint_matrix, lower_bounds, upper_bounds, tolerance = 10^-8) {
+
   # First we isolate the equality constraints.
   meq_indices = sapply(1:length(lower_bounds), function(i) isTRUE(all.equal(
     lower_bounds[i], upper_bounds[i],tolerance = tolerance)))
-  meq = lower_bounds[meq_indices]
+  bvec = lower_bounds[meq_indices]
+  meq  = sum(meq_indices)
   Amat = constraint_matrix[meq_indices,]
 
-  # Inequality constraints require twice the matrix size - except when either lower or upper is
-  # -+ inf.
+  # Now we must isolate the lower and upper bounds.
+  nmeq_indices = !meq_indices
+  nmeq_mat = constraint_matrix[!meq_indices,]
+
+  # From this we obtain the lower bounds:
+  lower_indices = which(lower_bounds[nmeq_indices] != -Inf)
+  bvec = c(bvec, (lower_bounds[nmeq_indices])[lower_indices])
+  Amat = rbind(Amat, nmeq_mat[lower_indices,])
+
+  # And the upper bounds:
+  upper_indices = which(upper_bounds[nmeq_indices] != Inf)
+  bvec = c(bvec, -upper_bounds[nmeq_indices][upper_indices])
+  Amat = rbind(Amat, -nmeq_mat[upper_indices,])
+  list(Amat = Amat, bvec = bvec, meq = meq)
 }
 
