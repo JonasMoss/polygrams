@@ -1,7 +1,8 @@
 #' @export
-#' @describeIn base_functions Calculates quantiles of a Bernstein polygram.
+#' @describeIn base_functions Calculates quantiles of a Bernstein polygram. NOT IMPLEMENTED.
 
 qpolygram = function(p, polygram_object, lower.tail = TRUE, log.p = FALSE) {
+  stop("qpolygram has not been correctly implemented yet.")
 
   # We will need to calculate the weights for each bin, which is done by using w.
 
