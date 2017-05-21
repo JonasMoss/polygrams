@@ -1,7 +1,7 @@
 polygrams
 ================
 
-The polygrams package includes function for handling of *Bernstein polygrams*, a class of non-parametric density estimators.
+The polygrams package includes functions for handling of *Bernstein polygrams*, a class of non-parametric density estimators.
 
 Installation
 ------------
@@ -52,7 +52,7 @@ plot(polygram(dat, support = c(0, 270), s = 10))
 This density could be convex and monotone:
 
 ``` r
-plot(polygram(dat, support = c(0, 270), s = 10, shape = "convex", monotone = "decreasing"))
+plot(polygram(dat ~ convex + decreasing, support = c(0, 270), s = 10))
 ```
 
 <img src="README_files/figure-markdown_github/plot_monotone-1.png" width="750px" />

@@ -2,70 +2,60 @@
 % Please edit documentation in R/estimation_main.R
 \name{polygram}
 \alias{polygram}
-\title{Estimates a polygram with supplied data, m, p and split points. Several
-hard constraints are supported. The interface is prone to changes.}
+\title{Estimates a polygram with supplied \code{data}, \code{m}, \code{p} and split points. Several
+hard constraints are supported.}
 \usage{
-polygram(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL,
-  M = 1, symmetric = FALSE, monotone = NULL, shape = NULL,
-  moment_conditions = NULL, unimodal = FALSE, lower_boundary = NULL,
-  quantile_conditions = NULL, lambdas = NULL, upper_boundary = NULL,
-  nu = NULL, k = NULL, verbose = 0, method = "mosek")
+polygram(formula, s = NULL, m = NULL, p = NULL, support = NULL,
+  method = "quadprog")
 }
 \arguments{
-\item{data}{The data. Can be \code{NULL} if a density \code{d} is supplied.}
+\item{formula}{The data. Can be supplied as vector of values or as a \code{formula} object,
+see \code{details} for how to use the formula.}
 
 \item{s}{The vector of split points. If a natural number \code{K}, \code{s} is chosen as
-\code{(1:K)/(K+1)}. Defaults to \code{length(data)^(1/3)}. If \code{0} or \code{NULL}, Bernstein
+\code{(1:K)/(K+1)}. Defaults to \code{length(data)^(1/3)}. If \code{0} or \code{NULL}, a Bernstein
 density is computed.}
 
-\item{support}{A vector \code{c(l, u)} specifying the support of the density. Defaults to \code{c(0, 1)}.}
+\item{m}{The degree of the Bernstein polynomial. Can be either a number or a vector. If a number, it
+is repeated |s|+1 times; if a vector, it must be of length |s|+1, where the kth element
+specifies the degree of the Bernstein polynomial at the kth bin. Defaults to 3.}
 
-\item{m}{The order of the Bernstein polynomial. Defaults to 3.}
+\item{p}{Connectedness order.  Can be either a number or a vector. If a number, it
+is repeated |s| times; if a vector, it must be of length |s|, where the kth element
+specifies the degree of connectedness at the kth split. Defaults to m-1.}
 
-\item{p}{Connectedness order. Defaults to \code{m-1}.}
-
-\item{d}{Optional distribution function. Can be the base function in a
-Dirichlet process if used in conjunction with M. Defaults to NULL.}
-
-\item{M}{The concentration parameter in a Dirichlet process. Defaults to 1. Ignored
-if either \code{d} or \code{data} is \code{NULL}.}
-
-\item{symmetric}{Hard symmetry constraint. Requires that s is symmetric as well.}
-
-\item{monotone}{Hard monotonicity constraint. Can be \code{"increasing"},
-\code{"decreasing"} or \code{NULL}.}
-
-\item{shape}{Hard convexity / concavity constraint. Can be \code{"convex"},
-\code{"concave"} or \code{NULL}.}
-
-\item{moment_conditions}{A list of moment conditons. The argument "moment" tells
-which moment is being constrained, while a and be give upper and lower bounds.
-If only one a or b is given, it is assumed that a = b and the condition is
-constant.}
-
-\item{unimodal}{Hard unimodality constraint. Not supported yet.}
-
-\item{lower_boundary}{Hard lower boundary constraint. Defualts to NULL.}
-
-\item{quantile_conditions}{A list of quantile conditions. List of "quantile", i and j specifing
-the indices of the splits for where the quantile is.}
-
-\item{lambdas}{A vector of lambdas. The first element is lambda1, second lambda2, etc.}
-
-\item{upper_boundary}{Hard upper boundary constraint. Defualts to NULL.}
-
-\item{nu, k}{Specific unimodality constraints.}
-
-\item{verbose}{An integer between 0 and 10. Modifies Rmoseks verbose command.}
+\item{support}{A vector \code{c(l, u)} specifying the support of the density.
+Defaults to \code{c(0, 1)} provided it contains the support of the data. Use
+this option when you know something about the support of your data.}
 
 \item{method}{Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 a license.}
 }
 \value{
-A polygram object.
+A \code{polygram} object.
 }
 \description{
-Estimates a polygram with supplied data, m, p and split points. Several
-hard constraints are supported. The interface is prone to changes.
+Estimates a polygram with supplied \code{data}, \code{m}, \code{p} and split points. Several
+hard constraints are supported.
+}
+\details{
+The \code{formula} argument takes formulas such as \code{x ~ convex + decreasing},
+with the semantic that the data is on the left hand side and constraints on the right hand side.
+Supported constraints are c("increasing", "decreasing", "symmetric", "concave", "convex"), but
+this list will be larger soon.
+}
+\examples{
+
+# A convex and decreasing density.
+x = datasets::sunspot.month
+plot(polygram(x ~ convex + decreasing, support = c(0, 270), s = 10))
+
+# A crazy density.
+set.seed(1984)
+x = runif(11)
+m = c(3,1,3,3,2,2,3,3,1,3)
+p = c(1,1,2,1,0,1,2,1,1)
+obj = polygram(x ~ symmetric, m = m, p = p)
+plot(obj, bins = FALSE, main = "Symmetric polygram")
 }
 

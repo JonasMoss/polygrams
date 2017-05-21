@@ -52,7 +52,7 @@ and kernel density estimation.
 
 \item \code{ppolygram}: Calculates the distribution function of a Bernstein polygram.
 
-\item \code{qpolygram}: Calculates quantiles of a Bernstein polygram.
+\item \code{qpolygram}: Calculates quantiles of a Bernstein polygram. NOT IMPLEMENTED.
 }}
 \examples{
 ## Do a parametric bootstrap.

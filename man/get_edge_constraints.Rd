@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimation_hard_constraints.R
 \name{get_edge_constraints}
 \alias{get_edge_constraints}
-\title{Returns the edge constraints.}
+\title{Returns the edge constraints. Not finished yet.}
 \usage{
 get_edge_constraints(ms, s, directions = NULL)
 }
@@ -20,6 +20,6 @@ or "above" for each derivative in ps.}
 A matrix of constraints.
 }
 \description{
-Returns the edge constraints.
+Returns the edge constraints. Not finished yet.
 }
 

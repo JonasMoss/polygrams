@@ -17,7 +17,7 @@ mosek2qp(constraint_matrix, lower_bounds, upper_bounds, tolerance = 10^-8)
 }
 \value{
 A list containing a new constraints matrix "Amat", a vector "bvec" holding lower bounds
-and a vector "mveq" holding equality constraints.
+and a number meq telling how many are equality constraints.
 }
 \description{
 Makes quadprog-compliant matrices from rmosek-compliant ones.

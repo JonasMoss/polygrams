@@ -1,47 +1,63 @@
-#' Estimates a polygram with supplied data, m, p and split points. Several
-#' hard constraints are supported. The interface is prone to changes.
+#' Estimates a polygram with supplied \code{data}, \code{m}, \code{p} and split points. Several
+#' hard constraints are supported.
 #' @export
-#' @param data The data. Can be \code{NULL} if a density \code{d} is supplied.
+#' @param formula The data. Can be supplied as vector of values or as a \code{formula} object,
+#' see \code{details} for how to use the formula.
 #' @param s The vector of split points. If a natural number \code{K}, \code{s} is chosen as
-#' \code{(1:K)/(K+1)}. Defaults to \code{length(data)^(1/3)}. If \code{0} or \code{NULL}, Bernstein
+#' \code{(1:K)/(K+1)}. Defaults to \code{length(data)^(1/3)}. If \code{0} or \code{NULL}, a Bernstein
 #' density is computed.
-#' @param support A vector \code{c(l, u)} specifying the support of the density. Defaults to \code{c(0, 1)}.
-#' @param m The order of the Bernstein polynomial. Defaults to 3.
-#' @param p Connectedness order. Defaults to \code{m-1}.
-#' @param d Optional distribution function. Can be the base function in a
-#' Dirichlet process if used in conjunction with M. Defaults to NULL. Currently not supported.
-#' @param M The concentration parameter in a Dirichlet process. Defaults to 1. Ignored
-#' if either \code{d} or \code{data} is \code{NULL}.
-#' @param symmetric Hard symmetry constraint. Requires that s is symmetric as well.
-#' @param monotone Hard monotonicity constraint. Can be \code{"increasing"},
-#' \code{"decreasing"} or \code{NULL}.
-#' @param shape Hard convexity / concavity constraint. Can be \code{"convex"},
-#' \code{"concave"} or \code{NULL}.
-#' @param moment_conditions A list of moment conditons. The argument "moment" tells
-#' which moment is being constrained, while a and be give upper and lower bounds.
-#' If only one a or b is given, it is assumed that a = b and the condition is
-#' constant.
-#' @param quantile_conditions A list of quantile conditions. List of "quantile", i and j specifing
-#' the indices of the splits for where the quantile is.
-#' @param unimodal Hard unimodality constraint. Not supported yet.
-#' @param lower_boundary Hard lower boundary constraint. Defualts to NULL.
-#' @param upper_boundary Hard upper boundary constraint. Defualts to NULL.
-#' @param nu,k Specific unimodality constraints.
-#' @param lambdas A vector of lambdas. The first element is lambda1, second lambda2, etc.
-#' @param verbose An integer between 0 and 10. Modifies Rmoseks verbose command.
+#' @param m The degree of the Bernstein polynomial. Can be either a number or a vector. If a number, it
+#' is repeated |s|+1 times; if a vector, it must be of length |s|+1, where the kth element
+#' specifies the degree of the Bernstein polynomial at the kth bin. Defaults to 3.
+#' @param p Connectedness order.  Can be either a number or a vector. If a number, it
+#' is repeated |s| times; if a vector, it must be of length |s|, where the kth element
+#' specifies the degree of connectedness at the kth split. Defaults to m-1.
+#' @param support A vector \code{c(l, u)} specifying the support of the density.
+#' Defaults to \code{c(0, 1)} provided it contains the support of the data. Use
+#' this option when you know something about the support of your data.
 #' @param method Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 #' a license.
-#' @return A polygram object.
+#' @return A \code{polygram} object.
+#' @details The \code{formula} argument takes formulas such as \code{x ~ convex + decreasing},
+#' with the semantic that the data is on the left hand side and constraints on the right hand side.
+#' Supported constraints are c("increasing", "decreasing", "symmetric", "concave", "convex"), but
+#' this list will be larger soon.
+#' @examples
+#'
+#' # A convex and decreasing density.
+#' x = datasets::sunspot.month
+#' plot(polygram(x ~ convex + decreasing, support = c(0, 270), s = 10))
+#'
+#' # A crazy density.
+#' set.seed(1984)
+#' x = runif(11)
+#' m = c(3,1,3,3,2,2,3,3,1,3)
+#' p = c(1,1,2,1,0,1,2,1,1)
+#' obj = polygram(x ~ symmetric, m = m, p = p)
+#' plot(obj, bins = FALSE, main = "Symmetric polygram")
 
-polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL,
-                    M = 1, symmetric = FALSE, monotone = NULL, shape = NULL, moment_conditions = NULL,
-                    unimodal = FALSE, lower_boundary = NULL, quantile_conditions = NULL, lambdas = NULL,
-                    upper_boundary = NULL, nu = NULL, k = NULL, verbose = 0,
-                    method = "QP") {
+polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
+                    method = "quadprog") {
 
-  if(unimodal) {
-    stop("Unimodality is not implemented yet.")
+  ## ==========================================================================
+  ## This first section handles checks and fills in default values.
+  ## ==========================================================================
+
+  if("formula" %in% class(formula)) {
+    # Stashes all the data into a separate class.
+    response = head(all.vars(formula), n = 1)
+    data = eval(parse(text = response),
+         envir = attr(formula, ".Environment"))
+
+  } else {
+    tryCatch({
+    data = as.numeric(formula)
+    formula = formula ~ NULL
+    }, error = function(e) {
+      print("Supply either a valid formula or some valid (vector) data.")
+    })
   }
+
   # Fill in standard values
   if (is.null(m)) m = 3
   if (is.null(p)) p = m-1
@@ -54,7 +70,7 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
   }
   #if (p >= m) stop("p must be smaller than m.")
 
-  # Her we manipulate the support and the data. The data is molded into the
+  # Here we manipulate the support and the data. The data is molded into the
   # [0,1]-paradigm by dividing removing the lower support and dividing by the
   # length of the support. The same is done with the vector of splits.
 
@@ -115,7 +131,6 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
 
   K = length(s) + 1
 
-
   # This is done in order to support variable ms and ps. Usually, polygram will be called with
   # only a single value for m and p, but other values should be supported as well.
 
@@ -147,57 +162,21 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
     }
   }
 
-  constraint_list = list(
-    sum_constraint           = list(constraint = rep(1,sum(ms+1)),
-                                                 lower      = 1,
-                                                 upper      = 1),
+  ## ==========================================================================
+  ## The second objective is to fill in the constraints. This is done by
+  ## finding the appropriate terms in the formula object.
+  ## ==========================================================================
 
-    connectivity_constraints = get_connectivity_constraints(ms = ms, s = s, ps = ps,
-                                    directions = NULL),
+  constraint_list = formulas_to_constraint_list(formula, ms, s, ps)
+  constraint_matrix = constraint_list$constraint
+  lower_bounds      = constraint_list$lower
+  upper_bounds      = constraint_list$upper
 
-    symmetry_constraints     = get_symmetry_constraints(ms = ms, s = s,
-                                    symmetric = symmetric),
-
-    monotone_constraints     = get_monotonicity_constraints(ms = ms, s = s,
-                                    monotone = monotone),
-
-    shape_constraints        = get_shape_constraints(ms = ms, s = s,
-                                    shape = shape),
-
-    moment_constraints       = get_moment_constraints(m = m, s = s,
-                                    moments       = moment_conditions$moments,
-                                    lower_bounds  = moment_conditions$lower_bounds,
-                                    upper_bounds  = moment_conditions$upper_bounds),
-
-    quantile_constraints     = get_quantile_constraints(m = m, s = s,
-                                    quantiles     = quantile_conditions$quantiles,
-                                    lower_indices = quantile_conditions$lower_indices,
-                                    upper_indices = quantile_conditions$upper_indices),
-
-    unimodal_constraints     = get_unimodal_constraints(m = m, s = s, p = p,
-                                    unimodal = unimodal,
-                                    nu = nu,
-                                    k = K)
-  )
-
-  constraint_matrix = do.call(rbind, sapply(constraint_list, function(object) object$constraint))
-  lower_bounds      = do.call(c,     sapply(constraint_list, function(object) object$lower))
-  upper_bounds      = do.call(c,     sapply(constraint_list, function(object) object$upper))
-
-  # This is the basic objective matrix - without any additional penalties.
-  qobj_ = polygram_objective_matrix(ms, s)
-
-  # Here comes additional penalties from the lambda list.
-  if (!is.null(lambdas)) {
-    for(i in 1:(length(lambdas))) {
-      qobj_ = qobj_ + lambdas[i]*polygram_penalty_matrix(s, m, p = i)
-    }
-  }
-
+  qobj = polygram_objective_matrix(ms, s)        # The objective matrix.
   dvec = -polygram_objective_vector(data, ms, s) # The objective vector.
 
   if (method == "mosek" | method == "rmosek" | method == "mosek") {
-    qobj = as.mosek_mat(qobj_)
+    qobj = as.mosek_mat(qobj)
 
     N = length(dvec)
 
@@ -264,7 +243,7 @@ polygram = function(data, s = NULL, support = NULL, m = NULL, p = NULL, d = NULL
     v
   } else if (method == "quadprog" | method == "QP" | method == "qp") {
     qp_list = mosek2qp(constraint_matrix, lower_bounds, upper_bounds)
-    Dmat = qobj_
+    Dmat = qobj
     Amat = qp_list$Amat
     bvec = qp_list$bvec
     meq  = qp_list$meq

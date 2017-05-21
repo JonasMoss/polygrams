@@ -7,7 +7,7 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(out.width='750px', dpi=200)
 ```
-The polygrams package includes function for handling of *Bernstein polygrams*, a class of non-parametric density estimators. 
+The polygrams package includes functions for handling of *Bernstein polygrams*, a class of non-parametric density estimators. 
 
 ## Installation
 From inside `R`, the package can be installed from GitHub by using devtools.
@@ -49,5 +49,5 @@ plot(polygram(dat, support = c(0, 270), s = 10))
 This density could be convex and monotone:
 
 ```{r plot_monotone}
-plot(polygram(dat, support = c(0, 270), s = 10, shape = "convex", monotone = "decreasing"))
+plot(polygram(dat ~ convex + decreasing, support = c(0, 270), s = 10))
 ```
