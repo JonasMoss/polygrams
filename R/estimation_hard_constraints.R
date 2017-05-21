@@ -117,11 +117,11 @@ get_connectivity_constraints = function(ms, s, ps, directions = NULL) {
     }
   })
 
-  lower_matrix_ = do.call(hisemi::directSum, lower_matrices)
+  lower_matrix_ = do.call(direct_sum, lower_matrices)
   lower_matrix  = cbind(lower_matrix_,
                        matrix(0, ncol = ms[K] + 1, nrow = nrow(lower_matrix_)))
 
-  upper_matrix_  = do.call(hisemi::directSum, upper_matrices)
+  upper_matrix_  = do.call(direct_sum, upper_matrices)
   upper_matrix  = cbind(matrix(0, ncol = ms[1] + 1, nrow = nrow(upper_matrix_)),
                        upper_matrix_)
 
@@ -289,7 +289,7 @@ get_monotonicity_constraints = function(ms, s, monotone) {
     }
   })
 
-  local_constraint  = do.call(hisemi::directSum, matrices)
+  local_constraint  = do.call(direct_sum, matrices)
   local_lower       = rep(0, nrow(local_constraint))
   local_upper       = local_lower + Inf
 
@@ -363,7 +363,7 @@ get_shape_constraints = function(ms, s, shape) {
     }
   })
 
-  local_constraint  = do.call(hisemi::directSum, matrices)
+  local_constraint  = do.call(direct_sum, matrices)
   local_lower       = rep(0, nrow(local_constraint))
   local_upper       = local_lower + Inf
 
@@ -565,7 +565,7 @@ get_unimodal_constraints = function(m, s, p, unimodal, nu, k) {
     # The constraints are constructed, but have duplicate columns in
     # middle: The column with index (m+1)*(k-1) + nu + 1 and
     # (m+1)*(k-1) + nu + 2 must be summed.
-    constraints_ = hisemi::directSum(block, block_)
+    constraints_ = direct_sum(block, block_)
     constraints_[,(m+1)*(k-1) + nu + 1] = constraints_[,(m+1)*(k-1) + nu + 1] +
       constraints_[,(m+1)*(k-1) + nu + 2]
     constraint = constraints_[,-((m+1)*(k-1) + nu + 2)]

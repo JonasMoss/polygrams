@@ -176,6 +176,12 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   dvec = -polygram_objective_vector(data, ms, s) # The objective vector.
 
   if (method == "mosek" | method == "rmosek" | method == "mosek") {
+
+    if (!requireNamespace("Rmosek", quietly = TRUE)) {
+      stop("Rmosek needed for this function to work. Please install it.",
+           call. = FALSE)
+    }
+
     qobj = as.mosek_mat(qobj)
 
     N = length(dvec)

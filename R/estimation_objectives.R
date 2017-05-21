@@ -4,9 +4,15 @@
 #' @return A matrix in triangular sparse triplet form.
 
 as.mosek_mat = function(mat) {
+
+  if (!requireNamespace("Matrix", quietly = TRUE)) {
+    stop("Matrix needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
   new = mat*0
   new[upper.tri(mat, diag = TRUE)] = mat[upper.tri(mat, diag = TRUE)]
-  new = as(new, "dtTMatrix")
+  new = Matrix::as(new, "dtTMatrix")
   mat_ = list()
   mat_$i = attr(new, "j") + 1
   mat_$j = attr(new, "i") + 1
@@ -174,7 +180,7 @@ polygram_objective_matrix = function(ms, s) {
 
   K = length(s) + 1
 
-  A = do.call(hisemi::directSum, lapply(1:K, function(k) weights[k]*A_(ms[k])))
+  A = do.call(direct_sum, lapply(1:K, function(k) weights[k]*A_(ms[k])))
 
   return(A)
 }
