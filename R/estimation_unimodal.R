@@ -1,6 +1,3 @@
-library("hisemi")
-library("Rmosek")
-
 # Iteratively calls polygram with different inputs.
 
 polygram_unimodal = function(data, s = length(data)^(1/3), m = NULL, p = NULL, d = d, M = M, support = NULL,
