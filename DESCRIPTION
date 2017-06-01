@@ -11,8 +11,18 @@ Description: Density estimation with discrete mixtures of Bernstein
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+ByteCompile: true
 Imports:
+    Rcpp (>= 0.12.8),  
+    RcppArmadillo (>= 0.4.200.0),
     quadprog
+LinkingTo: 
+    Rcpp, 
+    RcppArmadillo
+Depends: 
+    Rcpp, 
+    RcppArmadillo
+SystemRequirements: C++11
 Suggests:
     testthat,
     Rmosek
