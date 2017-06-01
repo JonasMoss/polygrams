@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// direct_sum_2
-arma::mat direct_sum_2(arma::mat mat1, arma::mat mat2);
-RcppExport SEXP polygrams_direct_sum_2(SEXP mat1SEXP, SEXP mat2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type mat1(mat1SEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type mat2(mat2SEXP);
-    rcpp_result_gen = Rcpp::wrap(direct_sum_2(mat1, mat2));
-    return rcpp_result_gen;
-END_RCPP
-}
 // objective_matrix
 arma::mat objective_matrix(arma::Col<int> ms, arma::vec s);
 RcppExport SEXP polygrams_objective_matrix(SEXP msSEXP, SEXP sSEXP) {

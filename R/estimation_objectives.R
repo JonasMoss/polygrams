@@ -12,7 +12,7 @@ as.mosek_mat = function(mat) {
 
   new = mat*0
   new[upper.tri(mat, diag = TRUE)] = mat[upper.tri(mat, diag = TRUE)]
-  new = Matrix::as(new, "dtTMatrix")
+  new = as(new, "dtTMatrix")
   mat_ = list()
   mat_$i = attr(new, "j") + 1
   mat_$j = attr(new, "i") + 1

@@ -18,8 +18,6 @@
 #' @param method Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 #' a license.
 #' @param data an optional vector containing the data used in the formula.
-#' @param cv if \code{True}, runs a cross-validation. Defaults to \code{NULL}, and in this case a cv
-#' is performed when either s or m is \code{NULL}.
 #' @param nfold the number of folds in cross-validation. Defaults to 5.
 #' @return A \code{polygram} object.
 #' @details The \code{formula} argument takes formulas such as \code{x ~ convex + decreasing},
@@ -41,12 +39,14 @@
 #' plot(obj, bins = FALSE, main = "Symmetric polygram")
 
 polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
-                    data = NULL, method = "quadprog") {
+                    data = NULL,
+                    method = c("quadprog", "Rmosek", "constrOptim")) {
 
   ## ==========================================================================
   ## This first section handles checks and fills in default values.
   ## ==========================================================================
 
+  method = match.arg(method)
   if("formula" %in% class(formula)) {
     # Stashes all the data into a separate class.
     response = head(all.vars(formula), n = 1)
@@ -188,7 +188,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   qobj = polygram_objective_matrix(ms, s)        # The objective matrix.
   dvec = -polygram_objective_vector(data_, ms, s) # The objective vector.
 
-  if (method == "mosek" | method == "rmosek" | method == "mosek") {
+  if (method == "Rmosek") {
 
     if (!requireNamespace("Rmosek", quietly = TRUE)) {
       stop("Rmosek needed for this function to work. Please install it.",
@@ -206,16 +206,6 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     blx = c(rep(0,N))
     bux = c(rep(1,N))
 
-    if(!is.null(lower_boundary)) {
-      blx[1] = lower_boundary
-      bux[1] = lower_boundary
-    }
-
-    if(!is.null(upper_boundary)) {
-      blx[length(bux)] = upper_boundary
-      bux[length(bux)] = upper_boundary
-    }
-
     qo1 <- list()
     qo1$sense <- "min"
     qo1$c <- dvec
@@ -231,8 +221,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
 
     qo1$qobj <- qobj
 
-    r = Rmosek::mosek(qo1, opts = list(soldetail = 1,
-                             verbose = verbose))
+    r = Rmosek::mosek(qo1, opts = list(soldetail = 1))
     v = r$sol$itr$xx
     if(r$sol$itr$prosta == "ILL_POSED") {
       stop("The problem is ill-posed! Try a different s.")
@@ -245,22 +234,9 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     v = split(v, rep(1:(length(ms)), ms + 1))
     names(v) = NULL
     attr(v, "loss") = 2*r$sol$itr$pobjval
-    attr(v, "m") = ms
-    attr(v, "K") = K
 
-    if (is.null(s_org)) {
-      attr(v, "s") = rep(1,0)
-    } else {
-      attr(v, "s") = s_org
-    }
+  } else if (method == "quadprog") {
 
-    attr(v, "p") = ps
-    attr(v, "support") = support
-    attr(v, "call") = sys.call()
-    #attr(v, "sol") = r$sol
-    class(v) = c("polygram")
-    v
-  } else if (method == "quadprog" | method == "QP" | method == "qp") {
     qp_list = mosek2qp(constraint_matrix, lower_bounds, upper_bounds)
     Dmat = qobj
     Amat = qp_list$Amat
@@ -277,27 +253,18 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     v = split(v, rep(1:(length(ms)), ms + 1))
     names(v) = NULL
     attr(v, "loss") = 2*r$value
-    attr(v, "m") = ms
-    attr(v, "K") = K
-
-    if (is.null(s_org)) {
-      attr(v, "s") = rep(1,0)
-    } else {
-      attr(v, "s") = s_org
-    }
-
-    attr(v, "p") = ps
-    attr(v, "support") = support
-    attr(v, "method") = method
-    attr(v, "call") = sys.call()
-    class(v) = c("polygram")
-    v
-
-    # list(v = v,
-    #      Amat = Amat,
-    #      bvec = bvec,
-    #      meq  = meq)
   }
+
+  class(v) = c("polygram")
+  attr(v, "m") = ms
+  attr(v, "K") = K
+  attr(v, "s") = if (is.null(s_org)) rep(1,0) else s_org
+  attr(v, "p") = ps
+  attr(v, "support") = support
+  attr(v, "method") = method
+  attr(v, "call") = sys.call()
+  v
+
 }
 
 #' Makes quadprog-compliant matrices from rmosek-compliant ones.
