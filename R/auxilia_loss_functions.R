@@ -90,12 +90,11 @@ polygram_L2_loss = function(d, polygram_object, discrepancy = TRUE) {
 
   s       = c(attr(polygram_object, "s"))
   m       = attr(polygram_object, "m")
-  v       = polygram_object
-  dim(v)  = length(polygram_object)
+  v       = unlist(polygram_object)
 
   first = integrate(function(x) d(x)^2, lower = 0, upper = 1)$value
   middle = -sum(2*empirical_bernstein(NULL, s, m, d)*polygram_object)
-  last = t(v)%*%polygram_objective_matrix(s,m)%*%v
+  last = t(v)%*%polygram_objective_matrix(m, s)%*%v
 
   if (!discrepancy) {
     first + middle + last
@@ -108,15 +107,15 @@ polygram_L2_loss = function(d, polygram_object, discrepancy = TRUE) {
 #' Returns the penalty of order p for a polygram object.
 #'
 #' @param polygram_object A polygram object.
-#' @param p Derivative.
+#' @param p Derivative. Only supported for p = 0 right now.
 #' @return The pth penalty.
 
-penalty = function(polygram_object, p) {
+penalty = function(polygram_object, p = 0) {
   obj_      = polygram_object
   s         = c(attr(polygram_object, "s"))
   m         = attr(polygram_object, "m")
-  dim(obj_) = (length(s)+1)*(m+1)
-  mat       = polygram_penalty_matrix(s, m, p = p)
+  obj_      = unlist(obj_)
+  mat       = polygram_objective_matrix(m, s)
   c(t(obj_)%*%mat%*%obj_)
 }
 

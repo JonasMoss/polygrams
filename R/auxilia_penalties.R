@@ -1,7 +1,7 @@
 #' Calculates the penalty matrix for s, m and p.
 #'
 #' @param s A vector of splits. Sould not include end points.
-#' @param m The order of the Bernstein polynomial.
+#' @param m The orders of the Bernstein polynomial.
 #' @param p Derivative order.
 #' @return A matrix
 
@@ -53,7 +53,7 @@ polygram_penalty_matrix = function(s, m, p) {
   })
 
 
-  A = do.call(directSum, matrix_list)
+  A = do.call(direct_sum, matrix_list)
 
   return(A)
 }
