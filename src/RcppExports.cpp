@@ -6,18 +6,6 @@
 
 using namespace Rcpp;
 
-// objective_matrix
-arma::mat objective_matrix(arma::Col<int> ms, arma::vec s);
-RcppExport SEXP polygrams_objective_matrix(SEXP msSEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::Col<int> >::type ms(msSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type s(sSEXP);
-    rcpp_result_gen = Rcpp::wrap(objective_matrix(ms, s));
-    return rcpp_result_gen;
-END_RCPP
-}
 // polygram_objective_vector
 arma::vec polygram_objective_vector(arma::vec data, const arma::Col<int> ms, const arma::vec s);
 RcppExport SEXP polygrams_polygram_objective_vector(SEXP dataSEXP, SEXP msSEXP, SEXP sSEXP) {

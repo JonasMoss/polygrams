@@ -6,7 +6,7 @@
 hard constraints are supported.}
 \usage{
 polygram(formula, s = NULL, m = NULL, p = NULL, support = NULL,
-  data = NULL, method = "quadprog")
+  data = NULL, method = c("quadprog", "Rmosek", "constrOptim"))
 }
 \arguments{
 \item{formula}{The data. Can be supplied as vector of values or as a \code{formula} object,
@@ -32,9 +32,6 @@ this option when you know something about the support of your data.}
 
 \item{method}{Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 a license.}
-
-\item{cv}{if \code{True}, runs a cross-validation. Defaults to \code{NULL}, and in this case a cv
-is performed when either s or m is \code{NULL}.}
 
 \item{nfold}{the number of folds in cross-validation. Defaults to 5.}
 }

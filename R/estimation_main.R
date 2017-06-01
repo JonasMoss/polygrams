@@ -253,6 +253,27 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     v = split(v, rep(1:(length(ms)), ms + 1))
     names(v) = NULL
     attr(v, "loss") = 2*r$value
+  } else if (method == "constrOptim") {
+
+    # The linear constrained are obtained from the quadprog procedures.
+    qp_list = mosek2qp(constraint_matrix, lower_bounds, upper_bounds)
+    Dmat = qobj
+    Amat = qp_list$Amat
+    bvec = qp_list$bvec
+    meq  = qp_list$meq
+
+    # The starting value is obtained by running a quadprog iteration
+
+    # In addition, quadprog needs positivity constraints:
+    bvec = c(bvec, positive = rep(0,sum(ms+1)))
+    Amat = rbind(Amat, positive = diag(sum(ms+1)))
+
+    r = quadprog::solve.QP(Dmat = Dmat, dvec = -dvec, Amat = t(Amat), bvec = bvec, meq = meq)
+    v = r$sol
+
+    v = split(v, rep(1:(length(ms)), ms + 1))
+    names(v) = NULL
+    attr(v, "loss") = 2*r$value
   }
 
   class(v) = c("polygram")
