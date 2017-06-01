@@ -17,6 +17,10 @@
 #' this option when you know something about the support of your data.
 #' @param method Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 #' a license.
+#' @param data an optional vector containing the data used in the formula.
+#' @param cv if \code{True}, runs a cross-validation. Defaults to \code{NULL}, and in this case a cv
+#' is performed when either s or m is \code{NULL}.
+#' @param nfold the number of folds in cross-validation. Defaults to 5.
 #' @return A \code{polygram} object.
 #' @details The \code{formula} argument takes formulas such as \code{x ~ convex + decreasing},
 #' with the semantic that the data is on the left hand side and constraints on the right hand side.
@@ -37,7 +41,7 @@
 #' plot(obj, bins = FALSE, main = "Symmetric polygram")
 
 polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
-                    method = "quadprog") {
+                    data = NULL, method = "quadprog") {
 
   ## ==========================================================================
   ## This first section handles checks and fills in default values.
@@ -46,13 +50,15 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   if("formula" %in% class(formula)) {
     # Stashes all the data into a separate class.
     response = head(all.vars(formula), n = 1)
-    data = eval(parse(text = response),
+    data_ = eval(parse(text = response),
          envir = attr(formula, ".Environment"))
+    flag_formula = TRUE
 
   } else {
     tryCatch({
-    data = as.numeric(formula)
+    data_ = as.numeric(formula)
     formula = formula ~ NULL
+    flag_formula = FALSE
     }, error = function(e) {
       print("Supply either a valid formula or some valid (vector) data.")
     })
@@ -66,25 +72,32 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     len = length(m) - 1
     s = (1:len)/(len+1)
   } else if (is.null(s)) {
-    s = floor(length(data)^(1/3))
+    s = floor(length(data_)^(1/3))
   }
+
   #if (p >= m) stop("p must be smaller than m.")
 
   # Here we manipulate the support and the data. The data is molded into the
   # [0,1]-paradigm by dividing removing the lower support and dividing by the
   # length of the support. The same is done with the vector of splits.
 
-  if(!is.null(data) & (NA %in% data)) {
-      data = data[!is.na(data)]
+  if(!is.null(data)) {
+    data_ = data
   }
 
+  if(!is.null(data_) & (NA %in% data_)) {
+      data_ = data_[!is.na(data_)]
+  }
+
+
   if(is.null(support)) {
-    if(is.null(data)) {
+    if(is.null(data_)) {
       support = c(0,1)
     } else {
-      support = c(min(c(0, data)), max(1, data))
+      support = c(min(c(0, data_)), max(1, data_))
     }
   }
+
 
   if(support[1] > support[2]) {
     warning(paste0("The support vector appears to be flipped: c(",support[1],support[2],").
@@ -93,20 +106,20 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
 
   }
 
-  if(!is.null(data)) {
+  if(!is.null(data_)) {
 
-    if (NA %in% data) {
-      data = data[!is.na(data)]
+    if (NA %in% data_) {
+      data_ = data_[!is.na(data_)]
     }
 
-    if(max(data) > support[2]) {
-      warning("Support does not contain the max data. Support adjust accordingly.")
-      support[2] = max(data)
-    } else if(min(data) < support[1]) {
-      warning("Support does not contain the min data. Support adjust accordingly.")
-      support[1] = min(data)
+    if(max(data_) > support[2]) {
+      warning("Support does not contain the max data_. Support adjust accordingly.")
+      support[2] = max(data_)
+    } else if(min(data_) < support[1]) {
+      warning("Support does not contain the min data_. Support adjust accordingly.")
+      support[1] = min(data_)
     }
-    data  = (data - support[1])/(support[2] - support[1])
+    data_  = (data_ - support[1])/(support[2] - support[1])
   }
 
   if (length(s) == 1 & !is.null(s)) {
@@ -173,7 +186,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   upper_bounds      = constraint_list$upper
 
   qobj = polygram_objective_matrix(ms, s)        # The objective matrix.
-  dvec = -polygram_objective_vector(data, ms, s) # The objective vector.
+  dvec = -polygram_objective_vector(data_, ms, s) # The objective vector.
 
   if (method == "mosek" | method == "rmosek" | method == "mosek") {
 

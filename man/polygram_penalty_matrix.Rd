@@ -9,7 +9,7 @@ polygram_penalty_matrix(s, m, p)
 \arguments{
 \item{s}{A vector of splits. Sould not include end points.}
 
-\item{m}{The order of the Bernstein polynomial.}
+\item{m}{The orders of the Bernstein polynomial.}
 
 \item{p}{Derivative order.}
 }

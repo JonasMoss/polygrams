@@ -208,25 +208,27 @@ get_symmetry_constraints = function(ms, s, symmetric = FALSE) {
 
   # Tests if the supplied s is symmetric.
   k = length(s)
-  s_aug = c(0, s, 1)
-  lengths = sapply(1:(k+1), function(j) s_aug[j+1] - s_aug[j])
-  diffs = sapply(1:ceiling(k/2), function(j) lengths[k+2-j] - lengths[j])
+  if(k != 0) {
+    s_aug = c(0, s, 1)
+    lengths = sapply(1:(k+1), function(j) s_aug[j+1] - s_aug[j])
+    diffs = sapply(1:ceiling(k/2), function(j) lengths[k+2-j] - lengths[j])
 
-  tol = 10^-8
+    tol = 10^-8
 
-  if(abs(sum(diffs)) > tol) {
-    warning("The supplied s does not appear symmetric, a requirement for
-            the symmetry constraints to work.")
-  }
+    if(abs(sum(diffs)) > tol) {
+      warning("The supplied s does not appear symmetric, a requirement for
+              the symmetry constraints to work.")
+    }
 
-  # Tests if the supplied ms are symmetric:
-  diffs = sapply(1:ceiling(k/2), function(j) ms[k+2-j] - ms[j])
+    # Tests if the supplied ms are symmetric:
+    diffs = sapply(1:ceiling(k/2), function(j) ms[k+2-j] - ms[j])
 
-  tol = 10^-8
+    tol = 10^-8
 
-  if(abs(sum(diffs)) > tol) {
-    warning("The supplied m does not appear symmetric, a requirement for
-            the symmetry constraints to work.")
+    if(abs(sum(diffs)) > tol) {
+      warning("The supplied m does not appear symmetric, a requirement for
+              the symmetry constraints to work.")
+    }
   }
 
   len = floor(sum(ms+1)/2)
@@ -238,18 +240,6 @@ get_symmetry_constraints = function(ms, s, symmetric = FALSE) {
   } else {
     constraint = cbind(A, rep(0,len) ,B)
   }
-
-  #
-  # # Now can make the symmetries.
-  # if (k %% 2 == 1 | m %% 2 == 1) {
-  #   A = diag(sum(ms[1:floor(k/2)]+1))
-  #   B = -apply(A, 1, rev)
-  #   constraint = cbind(A,B)
-  # } else {
-  #   A = diag(((m+1)*(k+1)+1)/2-1)
-  #   B = -t(apply(A, 1, rev))
-  #   constraint = cbind(A, rep(0, nrow(B)), B)
-  # }
 
   bound = rep(0, nrow(constraint))
   list(constraint = constraint,

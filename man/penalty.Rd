@@ -4,12 +4,12 @@
 \alias{penalty}
 \title{Returns the penalty of order p for a polygram object.}
 \usage{
-penalty(polygram_object, p)
+penalty(polygram_object, p = 0)
 }
 \arguments{
 \item{polygram_object}{A polygram object.}
 
-\item{p}{Derivative.}
+\item{p}{Derivative. Only supported for p = 0 right now.}
 }
 \value{
 The pth penalty.

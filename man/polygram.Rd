@@ -6,7 +6,7 @@
 hard constraints are supported.}
 \usage{
 polygram(formula, s = NULL, m = NULL, p = NULL, support = NULL,
-  method = "quadprog")
+  data = NULL, method = "quadprog")
 }
 \arguments{
 \item{formula}{The data. Can be supplied as vector of values or as a \code{formula} object,
@@ -28,8 +28,15 @@ specifies the degree of connectedness at the kth split. Defaults to m-1.}
 Defaults to \code{c(0, 1)} provided it contains the support of the data. Use
 this option when you know something about the support of your data.}
 
+\item{data}{an optional vector containing the data used in the formula.}
+
 \item{method}{Optimisation method. "quadprog" (default) and "mosek" supported. Note that mosek requires
 a license.}
+
+\item{cv}{if \code{True}, runs a cross-validation. Defaults to \code{NULL}, and in this case a cv
+is performed when either s or m is \code{NULL}.}
+
+\item{nfold}{the number of folds in cross-validation. Defaults to 5.}
 }
 \value{
 A \code{polygram} object.
