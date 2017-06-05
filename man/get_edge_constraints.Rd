@@ -22,4 +22,3 @@ A matrix of constraints.
 \description{
 Returns the edge constraints. Not finished yet.
 }
-

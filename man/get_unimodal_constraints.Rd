@@ -23,4 +23,3 @@ A constraint matrix.
 \description{
 Returns the constraints needed to enforce modality at (nu,k).
 }
-

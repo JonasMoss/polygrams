@@ -17,4 +17,3 @@ The pth penalty.
 \description{
 Returns the penalty of order p for a polygram object.
 }
-

@@ -27,4 +27,3 @@ data "data" (or density "d"), splits vector s, with respect to
 Bernstein polynomials of order m. Used as a helper function in the
 polygram_objective_vector function.
 }
-

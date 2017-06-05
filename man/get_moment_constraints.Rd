@@ -25,4 +25,3 @@ A constraint matrix.
 Returns the constraints needed to enforce the pth moment to be in
 the interval [a,b]
 }
-

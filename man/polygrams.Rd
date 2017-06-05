@@ -11,4 +11,3 @@ polygrams
 \author{
 Jonas Moss <jonas.moss@gmail.com>
 }
-

@@ -26,4 +26,3 @@ B = matrix(1:20, ncol = 4)
 Sigma = direct_sum(A, B)
 
 }
-

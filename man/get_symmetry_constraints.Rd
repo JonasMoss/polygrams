@@ -17,4 +17,3 @@ A constraint matrix.
 \description{
 Returns the constraints needed to enforce symmetry of a Bernstein polygram.
 }
-

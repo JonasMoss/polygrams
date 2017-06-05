@@ -37,4 +37,3 @@ Performs k-fold cross-validation on the input formula.
 \details{
 
 }
-

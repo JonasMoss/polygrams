@@ -23,4 +23,3 @@ for the monotone
 Returns the constraints needed to enforce monotonicity of a Bernstein
 polygram.
 }
-

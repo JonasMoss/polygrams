@@ -24,4 +24,3 @@ A real number, the L2-loss.
 Returns the true L2-loss for a weight matrix V and underlying distribution
 d. Useful for theoretical investigations or simulation studies.
 }
-

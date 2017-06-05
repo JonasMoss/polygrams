@@ -18,7 +18,8 @@ Imports:
     quadprog
 LinkingTo: 
     Rcpp, 
-    RcppArmadillo
+    RcppArmadillo,
+    BH
 Depends: 
     Rcpp, 
     RcppArmadillo
@@ -26,4 +27,4 @@ SystemRequirements: C++11
 Suggests:
     testthat,
     Rmosek
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

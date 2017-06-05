@@ -15,4 +15,3 @@ A matrix in triangular sparse triplet form.
 \description{
 Transforms a symmetric matrix into the form demanded by Rmosek.
 }
-

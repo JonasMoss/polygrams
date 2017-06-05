@@ -62,4 +62,3 @@ p = c(1,1,2,1,0,1,2,1,1)
 obj = polygram(x ~ symmetric, m = m, p = p)
 plot(obj, bins = FALSE, main = "Symmetric polygram")
 }
-

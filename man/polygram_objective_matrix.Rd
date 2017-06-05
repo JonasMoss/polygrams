@@ -14,4 +14,3 @@ polygram_objective_matrix(ms, s)
 \description{
 Calculates the objective matrix for use in a polygram.
 }
-

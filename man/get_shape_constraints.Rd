@@ -21,4 +21,3 @@ A constraint matrix.
 Returns the constraints needed to enforce convexity / concavity of
 a Bernstein histogram.
 }
-

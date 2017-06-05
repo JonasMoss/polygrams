@@ -19,4 +19,3 @@ A matrix of constraints.
 \description{
 Returns the connectivity constraints for Cp.
 }
-

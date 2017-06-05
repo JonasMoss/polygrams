@@ -39,11 +39,12 @@ plot.polygram = function(polygram_object, derivative = 0, rug = TRUE, bins = TRU
     plot(xx, yy_hist, bty = bty, ylim = ylim, xlab = xlab, ylab = ylab,
          main = main, type = "n")
 
+
     diffs = sapply(1:(length(s_aug_)-1), function(i) s_aug_[i+1] - s_aug_[i])
     eps = min(diffs)/2
 
     for (i in 1:(length(s)+1)) {
-      xx_ = seq(s_aug_[i] + eps, s_aug_[i+1], by = eps/2)
+      xx_ = seq(s_aug_[i], s_aug_[i+1] - eps, by = eps/2)
       xx_ = xx*(support[2]-support[1]) + support[1]
       lines(xx_, dxpolygram(xx_, polygram_object, p = derivative), ...)
     }

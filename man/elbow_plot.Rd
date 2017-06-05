@@ -25,4 +25,3 @@ An elbow plot.
 \description{
 Makes an elbow plot for a polygram object.
 }
-

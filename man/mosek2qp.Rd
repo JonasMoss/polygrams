@@ -22,4 +22,3 @@ and a number meq telling how many are equality constraints.
 \description{
 Makes quadprog-compliant matrices from rmosek-compliant ones.
 }
-

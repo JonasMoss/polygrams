@@ -5,5 +5,4 @@
 #'@name polygrams
 #'@importFrom Rcpp evalCpp
 #'@useDynLib polygrams
-#'@exportPattern "^[[:alpha:]]+"
 NULL

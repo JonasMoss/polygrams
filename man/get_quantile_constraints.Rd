@@ -28,4 +28,3 @@ upper bounds.
 Returns the constraints needed to enforce the qth quantile to be between
 the splits s_i and s_k
 }
-

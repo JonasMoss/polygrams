@@ -5,10 +5,10 @@
 \title{A function that calculates the objective vector of a polygram. Needed for
 the quadratic optimization routine, and can be of independent interest.}
 \usage{
-polygram_objective_vector(data, ms, s)
+polygram_objective_vector(x, ms, s, support)
 }
 \arguments{
-\item{data}{a Armadillo<double> vector containing the data}
+\item{x}{a Armadillo<double> vector containing the data}
 
 \item{ms}{an Armadillo<integer> vector containing the Bernstein degrees. Must be
 of size |s| + 1}
@@ -23,4 +23,3 @@ objective vector for the optimization program.
 A function that calculates the objective vector of a polygram. Needed for
 the quadratic optimization routine, and can be of independent interest.
 }
-

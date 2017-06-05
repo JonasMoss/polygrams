@@ -17,4 +17,3 @@ The least squares discrepancy.
 Obtains the empirical discrepancy of a polygram object. If d is non-null,
 it is calculated with d as the true density.
 }
-

@@ -23,4 +23,3 @@ Calculates the L2-loss between two polygram objects. The first argument
 is interpreted as the "true" polygram. Only supported when m are equal for the
 moment.
 }
-

@@ -22,4 +22,3 @@ upper bounds.
 \description{
 A helper function for \code{formulas_to_constraint_list }. Handles the simple terms.
 }
-

@@ -186,7 +186,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   upper_bounds      = constraint_list$upper
 
   qobj = polygram_objective_matrix(ms, s)        # The objective matrix.
-  dvec = -polygram_objective_vector(data_, ms, s) # The objective vector.
+  dvec = -polygram_objective_vector(data_, ms, s, support) # The objective vector.
 
   if (method == "Rmosek") {
 

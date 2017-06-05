@@ -39,4 +39,3 @@ Currently supported options are:
            in support, and a float in (0,1) specifying the quantile.
  }
 }
-

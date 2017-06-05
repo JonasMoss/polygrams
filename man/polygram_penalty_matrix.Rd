@@ -19,4 +19,3 @@ A matrix
 \description{
 Calculates the penalty matrix for s, m and p.
 }
-

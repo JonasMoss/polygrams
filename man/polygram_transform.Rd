@@ -27,4 +27,3 @@ functions are equal. It does not attempt to find inverse solutions, so
 \code{s} $\subset$ \code{s_new} is required. Furthermore, this inclusion
 must be exact. (No different floating points arithmetics allowed.)
 }
-
