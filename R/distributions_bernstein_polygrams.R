@@ -31,7 +31,10 @@ NULL
 
 #' @describeIn distributions_bernstein_densities Calculates pth derivative of a
 #'  Bernstein density.
-dxpolygram = function(x, polygram_object, p = 1, support = c(0, 1), log = FALSE) {
+dxpolygram =function(x, polygram_object,
+                     support    = c(0, 1),
+                     p          = 1,
+                     log        = FALSE) {
   # This R function calls a C++ function which does not handle list objects
   # easily, hence the list in polygram_object will be changed into a vector,
   # and its split points stored in ms.
@@ -61,18 +64,34 @@ dxpolygram = function(x, polygram_object, p = 1, support = c(0, 1), log = FALSE)
 
 #' @describeIn distributions_bernstein_densities Calculates a Bernstein
 #' polygram density.
-dpolygram = function(x, polygram_object, support = c(0, 1), log = FALSE) {
-  dxpolygram(x, polygram_object = polygram_object, support = support, p = 0, log = log)
+dpolygram = function(x, polygram_object,
+                     support    = c(0, 1),
+                     log        = FALSE) {
+  # Both dpolygram and ppolygram work through dxpolygram.
+  dxpolygram(x, polygram_object = polygram_object,
+                support         = support,
+                p               = 0,
+                log             = log)
 }
 
 #' @describeIn distributions_bernstein_densities Calculates a Bernstein
 #' polygram distribution function.
-ppolygram = function(q, polygram_object, support = c(0, 1), lower.tail = TRUE, log.p = FALSE) {
-  if (lower.tail){
-    dxpolygram(q, polygram_object = polygram_object, support = support, p = -1, log = log.p)
-  } else {
-    1 - dxpolygram(q, polygram_object = polygram_object, support = support, p = -1, log = log.p)
+ppolygram = function(q, polygram_object,
+                     support    = c(0, 1),
+                     lower.tail = TRUE,
+                     log.p      = FALSE) {
+  # Both ppolygram and dpolygram work through dxpolygram.
+  probabilities =  dxpolygram(q, polygram_object = polygram_object,
+                                 support         = support,
+                                 p               = -1,
+                                 log             = log.p)
+
+  if (!lower.tail){
+    probabilities = 1 - probabilities
   }
+
+  probabilities
+
 }
 
 

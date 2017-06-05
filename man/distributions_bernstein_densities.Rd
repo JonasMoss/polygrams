@@ -18,7 +18,7 @@ dbernstein(x, lambda, p = 1, support = c(0, 1), log = FALSE)
 
 pbernstein(x, lambda, p = 1, support = c(0, 1), log.p = FALSE)
 
-dxpolygram(x, polygram_object, p = 1, support = c(0, 1), log = FALSE)
+dxpolygram(x, polygram_object, support = c(0, 1), p = 1, log = FALSE)
 
 dpolygram(x, polygram_object, support = c(0, 1), log = FALSE)
 

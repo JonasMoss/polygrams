@@ -80,7 +80,7 @@ arma::vec dxpolygram_cpp(const arma::vec& x,
   } else {
     coefs = integral_coeffient_matrix(m, p);
     poch  = 1/boost::math::falling_factorial<double>((m - p + 1), -p);
-    mult  = std::pow((support(1) - support(0)),-p)*poch;
+    mult  = std::pow((support(1) - support(0)),-p);
   }
 
   arma::vec multiplier = coefs.t()*lambda;
@@ -100,8 +100,8 @@ arma::vec dxpolygram_cpp(const arma::vec& x,
         coefs = integral_coeffient_matrix(m, p);
         poch  = 1/boost::math::falling_factorial<double>((m - p + 1), -p);
         adder = adder + arma::dot(lambda, coefs.col(m - p))*(m-p+1)*poch;
-        std::cout << adder << std::endl;
-        mult  = std::pow((support(1) - support(0)),-p)*poch;
+        //std::cout << adder << std::endl;
+        mult  = std::pow((support(1) - support(0)),-p);
       }
 
       lower_index += m + 1;
@@ -110,11 +110,16 @@ arma::vec dxpolygram_cpp(const arma::vec& x,
 
       lambda = w.subvec(lower_index, upper_index);
 
-      arma::vec multiplier = coefs.t()*lambda;
+      multiplier = coefs.t()*lambda;
+
+      // for(auto& elem:multiplier) {
+      //   std::cout << elem << std::endl;
+      // }
+      // std::cout << "!" << std::endl;
     }
 
     arma::vec basis_values = bernstein_basis_density((x[index]), m-p, support);
-    density_values(index) = arma::dot(multiplier, basis_values)*mult + adder;
+    density_values(index) = arma::dot(multiplier, basis_values)*mult*poch + adder;
 
   }
 
