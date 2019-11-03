@@ -8,12 +8,11 @@
 \alias{rpolygram}
 \title{The Polygram Class of Distributions}
 \usage{
-dxpolygram(x, object, support = c(0, 1), p = 1, log = FALSE)
+dxpolygram(x, object, p = 1, log = FALSE)
 
-dpolygram(x, object, support = c(0, 1), log = FALSE)
+dpolygram(x, object, log = FALSE)
 
-ppolygram(q, object, support = c(0, 1), lower.tail = TRUE,
-  log.p = FALSE)
+ppolygram(q, object, lower.tail = TRUE, log.p = FALSE)
 
 rpolygram(n, object)
 }
