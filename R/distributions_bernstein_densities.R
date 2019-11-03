@@ -10,8 +10,6 @@
 #' @param support The support of the
 #' @param log,log.p logical; if \code{TRUE}, probabilities p are given as log(p).
 #' @param lower.tail logical; if  \code{TRUE} (default), probabilities are \eqn{P[x\leX]} otherwise, \eqn{P[X<x]}.
-#' @details A Bernstein density on [a, b] is a subset Such polygrams can be used for non-parametric density estimation, as an alternative to logsplines
-#' and kernel density estimation.
 #' @return \code{dbernstein} gives the density, \code{pbernstein} the distribution function, \code{qbernstein}
 #' the quantile function, \code{rbeta} generates random deviates, and \code{dxbernstein} gives the pth
 #' derivative of the density function.
