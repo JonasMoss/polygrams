@@ -15,9 +15,6 @@
 #' splits.
 #' @param ... additional arguments passed to \code{polygram}.
 #' @return A \code{cv.polygram} object.
-#' @details
-#'
-#' @examples
 
 cv.polygrams = function(formula, nfolds = 10, candidates = NULL,
                         support = NULL, data = NULL, m = NULL, p = NULL, ...) {

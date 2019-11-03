@@ -120,6 +120,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
       support[1] = min(data_)
     }
     data_  = (data_ - support[1])/(support[2] - support[1])
+
   }
 
   if (length(s) == 1 & !is.null(s)) {
@@ -186,7 +187,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
   upper_bounds      = constraint_list$upper
 
   qobj = polygram_objective_matrix(ms, s)        # The objective matrix.
-  dvec = -polygram_objective_vector(data_, ms, s, support) # The objective vector.
+  dvec = -polygram_objective_vector(data_, ms, s, c(0, 1)) # The objective vector.
 
   if (method == "Rmosek") {
 
@@ -276,6 +277,7 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     attr(v, "loss") = 2*r$value
   }
 
+  print(s)
   class(v) = c("polygram")
   attr(v, "m") = ms
   attr(v, "K") = K
@@ -318,5 +320,120 @@ mosek2qp  = function(constraint_matrix, lower_bounds, upper_bounds, tolerance = 
   bvec = c(bvec, -upper_bounds[nmeq_indices][upper_indices])
   Amat = rbind(Amat, -nmeq_mat[upper_indices,])
   list(Amat = Amat, bvec = bvec, meq = meq)
+}
+
+#' Calculates the penalty matrix for s, m and p.
+#'
+#' @param s A vector of splits. Sould not include end points.
+#' @param m The orders of the Bernstein polynomial.
+#' @param p Derivative order.
+#' @return A matrix
+
+polygram_penalty_matrix = function(s, m, p) {
+
+  K = length(s) + 1
+
+  # The penalty matrix is a direct sum of K square matrices
+  # of size m[k] x m[k]. Each of these matrices multplied with
+  # a scalar after production.
+
+  if(length(m) == 1) {
+    m = rep(m, K)
+  }
+
+  s_aug = c(0, s, 1)
+
+  Sigma = Vectorize(function(nu, eta, mk, p) {
+    lower_bound_nu  = max(0, nu + p - mk)
+    lower_bound_eta = max(0, eta + p - mk)
+    upper_bound_nu  = min(nu, p)
+    upper_bound_eta = min(eta, p)
+
+    if ((lower_bound_nu  > upper_bound_nu) |
+        (lower_bound_eta > upper_bound_eta)) {
+      return(0)
+    }
+
+    is = lower_bound_nu:upper_bound_nu
+    js = lower_bound_eta:upper_bound_eta
+
+    summands = function(i, j) {
+      first  = (-1)^(j+i)*choose(mk - p, nu - i)*choose(mk - p, eta - j)
+      second = choose(p, i)*choose(p, j)
+      third  = choose(2*(mk-p), nu - i + eta -j)
+      first*second/third
+    }
+
+    sum(outer(is, js, FUN = summands))
+  })
+
+  matrix_list = lapply(1:K, function(k) {
+    mk = m[k]
+    wk = s_aug[k+1] - s_aug[k]
+    mk_weight_a = (choose(mk, p)*factorial(p))^2*(mk - p + 1)^2
+    mk_weight_b = (2*(mk - p) + 1)*wk^(2*p+1)
+    mk_matrix = outer(0:mk, 0:mk, Sigma, mk = mk, p = p)
+    mk_matrix*mk_weight_a/mk_weight_b
+  })
+
+
+  A = do.call(direct_sum, matrix_list)
+
+  return(A)
+}
+
+#' Transforms a symmetric matrix into the form demanded by Rmosek.
+#'
+#' @param mat A matrix.
+#' @return A matrix in triangular sparse triplet form.
+
+as.mosek_mat = function(mat) {
+
+  if (!requireNamespace("Matrix", quietly = TRUE)) {
+    stop("Matrix needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  new = mat*0
+  new[upper.tri(mat, diag = TRUE)] = mat[upper.tri(mat, diag = TRUE)]
+  new = as(new, "dtTMatrix")
+  mat_ = list()
+  mat_$i = attr(new, "j") + 1
+  mat_$j = attr(new, "i") + 1
+  mat_$v = attr(new, "x")
+  mat_
+}
+
+
+#' Calculates the objective matrix for use in a polygram.
+#'
+#' @param ms Vector of Bernstein orders.
+#' @param s The vector of splits.
+
+polygram_objective_matrix = function(ms, s) {
+  # The objective matrix is a weighted direct sum of |s| + 1
+  # matrices on the same form: A_
+
+  A_ = function(m) {
+
+    FUN = Vectorize(function(eta,nu) {
+      (m+1)/(choose(2*m+1,m+1))*choose(eta+nu,eta)*choose(2*m-eta-nu,m-eta)
+    })
+
+    outer(0:m, 0:m, FUN)
+  }
+
+  # The next step is to do the direct sum of the weighted matrices.
+  s_aug = c(0,s,1)
+
+  weights = 1/sapply(1:(length(s_aug) - 1), function(i) {
+    s_aug[i+1] - s_aug[i]
+  })
+
+  K = length(s) + 1
+
+  A = do.call(direct_sum, lapply(1:K, function(k) weights[k]*A_(ms[k])))
+
+  return(A)
 }
 
