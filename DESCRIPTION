@@ -27,4 +27,4 @@ SystemRequirements: C++11
 Suggests:
     testthat,
     Rmosek
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
