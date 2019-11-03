@@ -13,6 +13,9 @@ knitr::opts_chunk$set(
   dpi = 200
 )
 ```
+
+# polygrams <img src="man/figures/logo.png" align="right" width="175" height="100" />
+
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/JonasMoss/polygrams.svg?branch=master)](https://travis-ci.org/JonasMoss/polygrams)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/JonasMoss/polygrams?branch=master&svg=true)](https://ci.appveyor.com/project/JonasMoss/polygrams)

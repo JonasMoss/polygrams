@@ -1,4 +1,6 @@
 
+# polygrams <img src="man/figures/logo.png" align="right" width="175" height="100" />
+
 <!-- badges: start -->
 
 [![Travis build
