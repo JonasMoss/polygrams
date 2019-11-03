@@ -26,5 +26,6 @@ Depends:
 SystemRequirements: C++11
 Suggests:
     testthat,
-    Rmosek
+    Rmosek,
+    covr
 RoxygenNote: 6.1.1
