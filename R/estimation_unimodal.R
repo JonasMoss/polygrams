@@ -24,27 +24,3 @@ polygram_unimodal = function(data, s = length(data)^(1/3), m = NULL, p = NULL, d
 
   polygram_obj
 }
-
-polygram_biimodal = function(data, s = length(data)^(1/3), m = NULL, p = NULL,
-                             symmetric = FALSE, monotone = NULL, shape = NULL) {
-
-  len = length(s) + 1
-  min_loss = Inf
-  index = NA
-  polygram_obj = NULL
-  for (k in 1:(len)) {
-    for (nu in 0:(m)) {
-      a = polygram(data = data, s = s, m = m, p = p, symmetric = symmetric, monotone = monotone,
-                   shape = shape, unimodal = TRUE, nu = nu, k = k)
-      loss = attr(a,"loss")
-      if(loss < min_loss) {
-        min_loss = loss
-        index = c(k = k,nu = nu)
-        polygram_obj = a
-      }
-    }
-  }
-
-  polygram_obj
-}
-
