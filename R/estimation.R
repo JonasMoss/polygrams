@@ -277,7 +277,6 @@ polygram = function(formula, s = NULL, m = NULL, p = NULL, support = NULL,
     attr(v, "loss") = 2*r$value
   }
 
-  print(s)
   class(v) = c("polygram")
   attr(v, "m") = ms
   attr(v, "K") = K
