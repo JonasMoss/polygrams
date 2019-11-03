@@ -2,27 +2,27 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 derivative_coeffient_matrix <- function(m, p) {
-    .Call('polygrams_derivative_coeffient_matrix', PACKAGE = 'polygrams', m, p)
+    .Call('_polygrams_derivative_coeffient_matrix', PACKAGE = 'polygrams', m, p)
 }
 
 integral_coeffient_matrix <- function(m, p) {
-    .Call('polygrams_integral_coeffient_matrix', PACKAGE = 'polygrams', m, p)
+    .Call('_polygrams_integral_coeffient_matrix', PACKAGE = 'polygrams', m, p)
 }
 
 dbernstein_cpp <- function(x, lambda, support, log = FALSE) {
-    .Call('polygrams_dbernstein_cpp', PACKAGE = 'polygrams', x, lambda, support, log)
+    .Call('_polygrams_dbernstein_cpp', PACKAGE = 'polygrams', x, lambda, support, log)
 }
 
 pbernstein_cpp <- function(q, lambda, support, log = FALSE) {
-    .Call('polygrams_pbernstein_cpp', PACKAGE = 'polygrams', q, lambda, support, log)
+    .Call('_polygrams_pbernstein_cpp', PACKAGE = 'polygrams', q, lambda, support, log)
 }
 
 dxbernstein_cpp <- function(x, lambda, support, p, log = FALSE) {
-    .Call('polygrams_dxbernstein_cpp', PACKAGE = 'polygrams', x, lambda, support, p, log)
+    .Call('_polygrams_dxbernstein_cpp', PACKAGE = 'polygrams', x, lambda, support, p, log)
 }
 
 dxpolygram_cpp <- function(x, w, ms, s_aug, p, log = FALSE) {
-    .Call('polygrams_dxpolygram_cpp', PACKAGE = 'polygrams', x, w, ms, s_aug, p, log)
+    .Call('_polygrams_dxpolygram_cpp', PACKAGE = 'polygrams', x, w, ms, s_aug, p, log)
 }
 
 #' A function that calculates the objective vector of a polygram. Needed for
@@ -36,6 +36,6 @@ dxpolygram_cpp <- function(x, w, ms, s_aug, p, log = FALSE) {
 #' @return an Armadillo<double> of size \code{sum(ms+1)} that contains the
 #' objective vector for the optimization program.
 polygram_objective_vector <- function(x, ms, s, support) {
-    .Call('polygrams_polygram_objective_vector', PACKAGE = 'polygrams', x, ms, s, support)
+    .Call('_polygrams_polygram_objective_vector', PACKAGE = 'polygrams', x, ms, s, support)
 }
 

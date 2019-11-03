@@ -64,13 +64,13 @@ arma::vec dxpolygram_cpp(const arma::vec& x,
   unsigned int lower_index = 0;
   unsigned int upper_index = m;
   double adder = 0;
-
   double poch;
   double mult = 1;
-  arma::mat coefs;
 
+  arma::mat coefs;
   arma::vec lambda = w.subvec(lower_index, upper_index);
   arma::vec2 support;
+
   support(0) = s_aug(bin_index);
   support(1) = s_aug(bin_index + 1);
 

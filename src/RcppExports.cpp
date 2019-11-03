@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // derivative_coeffient_matrix
 arma::mat derivative_coeffient_matrix(const int m, const int p);
-RcppExport SEXP polygrams_derivative_coeffient_matrix(SEXP mSEXP, SEXP pSEXP) {
+RcppExport SEXP _polygrams_derivative_coeffient_matrix(SEXP mSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // integral_coeffient_matrix
 arma::mat integral_coeffient_matrix(const int m, const int p);
-RcppExport SEXP polygrams_integral_coeffient_matrix(SEXP mSEXP, SEXP pSEXP) {
+RcppExport SEXP _polygrams_integral_coeffient_matrix(SEXP mSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +32,7 @@ END_RCPP
 }
 // dbernstein_cpp
 arma::vec dbernstein_cpp(const arma::Col<double>& x, const arma::Col<double>& lambda, const arma::vec& support, const bool& log);
-RcppExport SEXP polygrams_dbernstein_cpp(SEXP xSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP logSEXP) {
+RcppExport SEXP _polygrams_dbernstein_cpp(SEXP xSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const arma::Col<double>& >::type x(xSEXP);
@@ -45,7 +45,7 @@ END_RCPP
 }
 // pbernstein_cpp
 arma::vec pbernstein_cpp(const arma::Col<double>& q, const arma::Col<double>& lambda, const arma::vec& support, const bool& log);
-RcppExport SEXP polygrams_pbernstein_cpp(SEXP qSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP logSEXP) {
+RcppExport SEXP _polygrams_pbernstein_cpp(SEXP qSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const arma::Col<double>& >::type q(qSEXP);
@@ -58,7 +58,7 @@ END_RCPP
 }
 // dxbernstein_cpp
 arma::vec dxbernstein_cpp(const arma::Col<double>& x, const arma::Col<double>& lambda, const arma::vec& support, const int& p, const bool& log);
-RcppExport SEXP polygrams_dxbernstein_cpp(SEXP xSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP pSEXP, SEXP logSEXP) {
+RcppExport SEXP _polygrams_dxbernstein_cpp(SEXP xSEXP, SEXP lambdaSEXP, SEXP supportSEXP, SEXP pSEXP, SEXP logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< const arma::Col<double>& >::type x(xSEXP);
@@ -72,7 +72,7 @@ END_RCPP
 }
 // dxpolygram_cpp
 arma::vec dxpolygram_cpp(const arma::vec& x, const arma::vec& w, const arma::Col<int>& ms, const arma::vec& s_aug, const int& p, const bool log);
-RcppExport SEXP polygrams_dxpolygram_cpp(SEXP xSEXP, SEXP wSEXP, SEXP msSEXP, SEXP s_augSEXP, SEXP pSEXP, SEXP logSEXP) {
+RcppExport SEXP _polygrams_dxpolygram_cpp(SEXP xSEXP, SEXP wSEXP, SEXP msSEXP, SEXP s_augSEXP, SEXP pSEXP, SEXP logSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -88,7 +88,7 @@ END_RCPP
 }
 // polygram_objective_vector
 arma::vec polygram_objective_vector(arma::vec x, const arma::Col<int>& ms, const arma::vec& s, const arma::vec& support);
-RcppExport SEXP polygrams_polygram_objective_vector(SEXP xSEXP, SEXP msSEXP, SEXP sSEXP, SEXP supportSEXP) {
+RcppExport SEXP _polygrams_polygram_objective_vector(SEXP xSEXP, SEXP msSEXP, SEXP sSEXP, SEXP supportSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -102,13 +102,13 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"polygrams_derivative_coeffient_matrix", (DL_FUNC) &polygrams_derivative_coeffient_matrix, 2},
-    {"polygrams_integral_coeffient_matrix", (DL_FUNC) &polygrams_integral_coeffient_matrix, 2},
-    {"polygrams_dbernstein_cpp", (DL_FUNC) &polygrams_dbernstein_cpp, 4},
-    {"polygrams_pbernstein_cpp", (DL_FUNC) &polygrams_pbernstein_cpp, 4},
-    {"polygrams_dxbernstein_cpp", (DL_FUNC) &polygrams_dxbernstein_cpp, 5},
-    {"polygrams_dxpolygram_cpp", (DL_FUNC) &polygrams_dxpolygram_cpp, 6},
-    {"polygrams_polygram_objective_vector", (DL_FUNC) &polygrams_polygram_objective_vector, 4},
+    {"_polygrams_derivative_coeffient_matrix", (DL_FUNC) &_polygrams_derivative_coeffient_matrix, 2},
+    {"_polygrams_integral_coeffient_matrix", (DL_FUNC) &_polygrams_integral_coeffient_matrix, 2},
+    {"_polygrams_dbernstein_cpp", (DL_FUNC) &_polygrams_dbernstein_cpp, 4},
+    {"_polygrams_pbernstein_cpp", (DL_FUNC) &_polygrams_pbernstein_cpp, 4},
+    {"_polygrams_dxbernstein_cpp", (DL_FUNC) &_polygrams_dxbernstein_cpp, 5},
+    {"_polygrams_dxpolygram_cpp", (DL_FUNC) &_polygrams_dxpolygram_cpp, 6},
+    {"_polygrams_polygram_objective_vector", (DL_FUNC) &_polygrams_polygram_objective_vector, 4},
     {NULL, NULL, 0}
 };
 
