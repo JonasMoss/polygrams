@@ -1,58 +1,52 @@
-polygrams
-================
 
-The polygrams package includes functions for handling of *Bernstein polygrams*, a class of non-parametric density estimators.
+<!-- badges: start -->
 
-Installation
-------------
+[![Travis build
+status](https://travis-ci.org/JonasMoss/polygrams.svg?branch=master)](https://travis-ci.org/JonasMoss/polygrams)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/JonasMoss/polygrams?branch=master&svg=true)](https://ci.appveyor.com/project/JonasMoss/polygrams)
+[![Codecov test
+coverage](https://codecov.io/gh/JonasMoss/polygrams/branch/master/graph/badge.svg)](https://codecov.io/gh/JonasMoss/polygrams?branch=master)
+[![Project Status: WIP – Initial development is in progress, but there
+has not yet been a stable, usable release suitable for the
+public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+<!-- badges: end -->
 
-From inside `R`, the package can be installed from GitHub by using devtools.
+The `polygrams` package implements *Bernstein polygrams*, a class of
+non-parametric density estimators for univariate densities on bounded
+intervals.
+
+**Note:** Bernstein polygrams are currently not described in detail
+anywhere, but expect a paper on arXiv shortly.
+
+## Installation
+
+Install the package using `devtools` from inside `R`.
 
 ``` r
-library("devtools")
-install_github("JonasMoss/polygrams")
+# install.packages("devtools")
+devtools::install_github("JonasMoss/polygrams")
 ```
 
-Usage
------
+## Example Usage
 
-The core function is `polygram`, which calculates a polygram based on the supplied `data`, which is its first argument. When `data` has supported different form \[0,1\], you should consider supplying it with the argument `support`. `s` specifies the positions of the split points, or number of split points if an integer. `m` specifies the degree of the Bernstein polynomials, and defaults to 3, while `p` specifies the degree of connectedness between adjacent bins.
-
-For selecting `s`, the function `elbow_plot` is supplied. Generics such as `plot` should work well enough, and functions such as `dpolygram`, `ppolygram` and `rpolygram` work as well. The exception is `qpolygram` which hasn't been implemented yet.
-
-For functionality such as shape constraints, check the documentation of `polygram`. For more information, type `??polygrams` in the `R` console.
-
-Example usage
--------------
-
-Load the library as is usually done.
+The core function `polygram` calculates a Bernstein polygram from `x`.
 
 ``` r
 library("polygrams")
+#> Loading required package: Rcpp
+#> Loading required package: RcppArmadillo
+hist(iris$Sepal.Length, freq = FALSE, main = "Sepal length", xlab = "Length", ylim = c(0, 0.5))
+lines(polygram(iris$Sepal.Length, support = c(4, 9), s = 3))
+#> [1] 0.25 0.50 0.75
+rug(iris$Sepal.Length)
 ```
 
-As an application, we study the monthly sunspot data.
+<img src="man/figures/README-plot-1.png" width="750px" />
 
-``` r
-dat = datasets::sunspot.month
-summary(dat)
-```
+## How to Contribute or Get Help
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##    0.00   15.70   42.00   51.96   76.40  253.80
-
-Based on the summary we choose the support \[0,270\]. Let's try |s| = 10:
-
-``` r
-plot(polygram(dat, support = c(0, 270), s = 10))
-```
-
-<img src="README_files/figure-markdown_github/plot-1.png" width="750px" />
-
-This density could be convex and monotone:
-
-``` r
-plot(polygram(dat ~ convex + decreasing, support = c(0, 270), s = 10))
-```
-
-<img src="README_files/figure-markdown_github/plot_monotone-1.png" width="750px" />
+If you encounter a bug, have a feature request or need some help, open a
+[Github issue](https://github.com/JonasMoss/polygrams/issues). Create a
+pull requests to contribute. This project follows a [Contributor Code of
+Conduct](https://www.contributor-covenant.org/version/1/4/code-of-conduct.md).
