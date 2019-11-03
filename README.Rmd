@@ -1,22 +1,27 @@
 ---
-title: "polygrams"
-output: github_document
+output:
+  github_document:
+    html_preview: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(out.width='750px', dpi=200)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-",
+  out.width = '750px', 
+  dpi = 200
+)
 ```
 The polygrams package includes functions for handling of *Bernstein polygrams*, a class of non-parametric density estimators. 
 
 ## Installation
-From inside `R`, the package can be installed from GitHub by using devtools.
+Install the package using `devtools` from inside `R`.
 
 ```{r installation, eval=FALSE}
-library("devtools")
-install_github("JonasMoss/polygrams")
+# install.packages("devtools")
+devtools::install_github("JonasMoss/polygrams")
 ```
-
 
 ## Usage
 The core function is `polygram`, which calculates a polygram based on the supplied `data`, which is its first argument. When `data` has supported different form [0,1], you should consider supplying it with the argument `support`. `s` specifies the positions of the split points, or number of split points if an integer. `m` specifies the degree of the Bernstein polynomials, and defaults to 3, while `p` specifies the degree of connectedness between adjacent bins.
