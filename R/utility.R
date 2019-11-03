@@ -1,21 +1,19 @@
 #' Calculates the direct sum of matrices.
-#' @export
 #' @param ... the matrices that should be summed.
-#' @return The direct sum of the matrices in ... .
+#' @return The direct sum of the matrices in \code{...}.
 #' @details The direct sum of matrices A, B, C, D ... is obtained by pasting
-#' along the diagonal.
-#' @examples
-#'
-#' A = matrix(1:9, ncol = 3)
-#' B = matrix(1:20, ncol = 4)
-#' Sigma = direct_sum(A, B)
-#'
+#'    them along the diagonal.
+#' @keywords internal
+#' @examples \dontrun{
+#'    A = matrix(1:9, ncol = 3)
+#'    B = matrix(1:20, ncol = 4)
+#'    Sigma = direct_sum(A, B)
+#' }
 
 direct_sum = function(...) {
 
   matrices = list(...)
 
-  # Checks if they are matrices:
   are_matrices = lapply(matrices, function(mat) "matrix" %in% class(mat))
   if(!all(unlist(are_matrices))) stop("direct_sum can only take matrix inputs.")
 
@@ -33,4 +31,5 @@ direct_sum = function(...) {
   }
 
   return(Sigma)
+
 }
